@@ -6,10 +6,6 @@ public class CreateGrid : MonoBehaviour
 {
     [SerializeField]
     GameObject hexPref;
-    private void FixedUpdate()
-    {
-        
-    }
     public void createGrid()
     {
         GameObject temp = GameObject.Find("GameController");

@@ -22,14 +22,28 @@ public class CameraScript : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             firstPos = Input.mousePosition;
-            print(firstPos);
         }
         if (!Input.GetMouseButton(1)) return;
 
         Vector3 pos = mainCam.ScreenToViewportPoint(Input.mousePosition - firstPos);
-        print(pos);
-        Vector3 move = new Vector3(pos.x * panSpeed, pos.y * panSpeed,0);
+        if (pos.x < 0 && mainCam.transform.position.x<= GetComponent<GameController>().grid[0, 0].transform.position.x)
+        {
+            pos.x = 0;
+        }
+        if (pos.x > 0 && mainCam.transform.position.x >= GetComponent<GameController>().grid[0, GetComponent<GameController>().width-1].transform.position.x)
+        {
+            pos.x = 0;
+        }
+        if (pos.y < 0 && mainCam.transform.position.y <= GetComponent<GameController>().grid[0, 0].transform.position.y)
+        {
+            pos.y = 0;
+        }
+        if (pos.y > 0 && mainCam.transform.position.y >= GetComponent<GameController>().grid[GetComponent<GameController>().height - 1, 0].transform.position.y)
+        {
+            pos.y = 0;
+        }
 
+        Vector3 move = new Vector3(pos.x * panSpeed, pos.y * panSpeed, 0);
         mainCam.transform.Translate(move, Space.World);
     }
 }

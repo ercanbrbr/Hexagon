@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCam: {fileID: 519420031}
-  panSpeed: 0
+  panSpeed: 0.5
 --- !u!114 &233066052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,7 +249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e49eca1fdc76a634b8d9e670da5c56d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCam: {fileID: 0}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
