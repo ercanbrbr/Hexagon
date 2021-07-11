@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     {
         grid = new GameObject[height, width];
         GameObject.Find("Tilemap").GetComponent<CreateGrid>().createGrid();
-        StartCoroutine(test());
+        //StartCoroutine(test());
     }
 
     void checkPattern()

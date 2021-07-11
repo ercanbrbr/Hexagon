@@ -6,6 +6,10 @@ public class CreateGrid : MonoBehaviour
 {
     [SerializeField]
     GameObject hexPref;
+    private void FixedUpdate()
+    {
+        
+    }
     public void createGrid()
     {
         GameObject temp = GameObject.Find("GameController");
@@ -15,12 +19,25 @@ public class CreateGrid : MonoBehaviour
         {
             for (int j = 0; j < width; j++)
             {
-                GameObject temp1 = Instantiate(hexPref, new Vector3((j * 0.75f)-(width/2)*0.75f, (i - ((j % 2)) * 0.5f)-(height/2), 0), Quaternion.Euler(new Vector3(0, 0, 90)));
+                //GameObject temp1 = Instantiate(hexPref, new Vector3((j * 0.75f)-(width/2)*0.75f, (i - ((j % 2)) * 0.5f)-(height/2), 0), Quaternion.Euler(new Vector3(0, 0, 90)));
+                GameObject temp1 = Instantiate(hexPref);
+                StartCoroutine(setPosition(temp1, i, j, height, width));
                 temp1.transform.SetParent(this.transform);
                 temp1.GetComponent<Renderer>().material.SetColor("_Color", randomColor());
                 temp.GetComponent<GameController>().grid[i, j] = temp1;
             }
         }
+    }
+    IEnumerator setPosition(GameObject obj, int x,int y,int height, int width)
+    {
+        //obj.transform.position = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
+        Vector3 temp = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
+        while (temp!=obj.transform.position)
+        {
+            obj.transform.position = Vector3.Lerp(obj.transform.position, temp, 0.2f);
+            yield return null;
+        }
+        yield return null ;
     }
     Color randomColor()
     {
