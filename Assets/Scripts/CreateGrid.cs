@@ -43,16 +43,31 @@ public class CreateGrid : MonoBehaviour
             }
         }
     }
-    IEnumerator setPosition(GameObject obj, int x,int y)
+    /*IEnumerator setPosition(GameObject obj, int x,int y)
     {
+
         //obj.transform.position = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
         Vector3 temp = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
-        while (temp!=obj.transform.position)
+        while (obj != null && temp != obj.transform.position)
         {
             obj.transform.position = Vector3.Lerp(obj.transform.position, temp, 0.15f);
             yield return null;
         }
         yield return null;
+    }*/
+
+    IEnumerator setPosition(GameObject obj, int x, int y)
+    {
+        float time = 0;
+        float duration = 0.5f;
+        //obj.transform.position = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
+        Vector3 temp = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
+        while (time<duration)
+        {
+            obj.transform.position = Vector3.Lerp(obj.transform.position, temp, time/duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
     }
     Color randomColor()
     {

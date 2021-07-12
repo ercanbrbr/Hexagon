@@ -21,9 +21,7 @@ public class GameController : MonoBehaviour
         GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
 
         StartCoroutine(test());
-
     }
-
     void correctGrid()
     {
         for (int i = 0; i < width; i++)
@@ -74,7 +72,6 @@ public class GameController : MonoBehaviour
             score += 5;
         }
     }
-
     List<GameObject> pattern(int i, int j)
     {
         List<GameObject> temp = new List<GameObject>();
