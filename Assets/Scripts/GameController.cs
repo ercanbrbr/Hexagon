@@ -12,15 +12,39 @@ public class GameController : MonoBehaviour
     [SerializeField]
     public Colors[] hexColors;
     public GameObject[,] grid;
+    [SerializeField]
     int score = 0;
-
+    
     public void Start()
     {
         grid = new GameObject[height, width];
-        GameObject.Find("Tilemap").GetComponent<CreateGrid>().createGrid();
-        //StartCoroutine(test());
+        GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
+
+        StartCoroutine(test());
+
     }
 
+    void correctGrid()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (grid[j,i]==null)
+                {
+                    for (int k = j+1; k < height; k++)
+                    {
+                        if (grid[k,i]!=null)
+                        {
+                            grid[j, i] = grid[k, i];
+                            grid[k, i] = null;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
     void checkPattern()
     {
         List<GameObject> temp = new List<GameObject>();
@@ -47,6 +71,7 @@ public class GameController : MonoBehaviour
                 }
             }
             Destroy(item);
+            score += 5;
         }
     }
 
@@ -66,6 +91,7 @@ public class GameController : MonoBehaviour
                         if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate1[0], j + tempCoordinate1[1]].GetComponent<Renderer>().material.color && grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate2[0], j + tempCoordinate2[1]].GetComponent<Renderer>().material.color)
                         {
                             temp.Add(grid[i, j]);
+                            break;
                         }
                     }
                     catch { }
@@ -82,6 +108,7 @@ public class GameController : MonoBehaviour
                         if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate1[0], j + tempCoordinate1[1]].GetComponent<Renderer>().material.color && grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate2[0], j + tempCoordinate2[1]].GetComponent<Renderer>().material.color)
                         {
                             temp.Add(grid[i, j]);
+                            break;
                         }
                     }
                     catch { }
@@ -93,7 +120,15 @@ public class GameController : MonoBehaviour
     }
     IEnumerator test()
     {
-        yield return new WaitForSeconds(1);
-        checkPattern();
+        for (int i = 0; i < 10; i++)
+        {
+            yield return new WaitForSeconds(1);
+            checkPattern();
+            correctGrid();
+            yield return new WaitForSeconds(0.25f);
+            GameObject.Find("Tilemap").GetComponent<CreateGrid>().moveHexes();
+            yield return new WaitForSeconds(0.25f);
+            GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
+        }
     }
 }
