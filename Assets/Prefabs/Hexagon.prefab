@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2603679907738918531}
   - component: {fileID: 7218439460169003472}
+  - component: {fileID: 5415094623730560819}
   m_Layer: 0
   m_Name: Hexagon
-  m_TagString: Untagged
+  m_TagString: Hex
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5895083078438353269}
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.152, y: 0.133, z: 0}
   m_LocalScale: {x: 1.1, y: 0.95, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -81,3 +82,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5415094623730560819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5895083078438353269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: 1
+  eraseRenderer: 1

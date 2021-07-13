@@ -38,6 +38,14 @@ public class CameraScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
+            if (GetComponent<GameController>().locked == false)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    GetComponent<GameController>().selected[i] = -1;
+                }
+                GetComponent<GameController>().outlineObject();
+            }
             firstPos = Input.mousePosition;
         }
         if (!Input.GetMouseButton(1)) return;
