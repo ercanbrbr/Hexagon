@@ -116,7 +116,7 @@ public class GameController : MonoBehaviour
                 for (int x = 0; x < GetComponent<Coordinates>().odd.Length; x++)
                 {
                     int[] tempCoordinate1 = { GetComponent<Coordinates>().odd[x, 0], GetComponent<Coordinates>().odd[x, 1] };
-                    int[] tempCoordinate2 = { GetComponent<Coordinates>().odd[(x + 1) % GetComponent<Coordinates>().odd.Length, 0], GetComponent<Coordinates>().odd[(x + 1) % GetComponent<Coordinates>().odd.Length, 1] };
+                    int[] tempCoordinate2 = { GetComponent<Coordinates>().odd[(x + 1) % 6, 0], GetComponent<Coordinates>().odd[(x + 1) % 6, 1] };
                     try
                     {
                         if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate1[0], j + tempCoordinate1[1]].GetComponent<Renderer>().material.color && grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate2[0], j + tempCoordinate2[1]].GetComponent<Renderer>().material.color)
@@ -264,10 +264,14 @@ public class GameController : MonoBehaviour
                     for (int x = 0; x < GetComponent<Coordinates>().even.Length; x++)
                     {
                         int[] tempCoordinate = { GetComponent<Coordinates>().even[x, 0], GetComponent<Coordinates>().odd[x, 1] };
-                        if(grid[i,j].GetComponent<Renderer>().material.color== grid[i + tempCoordinate[0], j + tempCoordinate[1]].GetComponent<Renderer>().material.color)
+                        try
                         {
-                            return;
+                            if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate[0], j + tempCoordinate[1]].GetComponent<Renderer>().material.color)
+                            {
+                                return;
+                            }
                         }
+                        catch { }
                     }
                     
                 }
@@ -276,10 +280,14 @@ public class GameController : MonoBehaviour
                     for (int x = 0; x < GetComponent<Coordinates>().odd.Length; x++)
                     {
                         int[] tempCoordinate = { GetComponent<Coordinates>().odd[x, 0], GetComponent<Coordinates>().odd[x, 1] };
-                        if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate[0], j + tempCoordinate[1]].GetComponent<Renderer>().material.color)
+                        try
                         {
-                            return;
+                            if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate[0], j + tempCoordinate[1]].GetComponent<Renderer>().material.color)
+                            {
+                                return;
+                            }
                         }
+                        catch { }
                     }
                 }
             }
