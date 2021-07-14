@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    /*Buraya renk eklerseniz, CreateGrid scripttindeki randomColor fonksiyonuna karşılığının yazılması gerekiyor.*/
     public enum Colors {Red,Blue,Orange,Green,Yellow,White,Black,Gray }; 
     [SerializeField]
     public int height = 8;
@@ -298,6 +299,7 @@ public class GameController : MonoBehaviour
         }
         gameOver();
     }
+    /*Oyun bitişi.*/
     public void gameOver()
     {
         if (score > highScore)

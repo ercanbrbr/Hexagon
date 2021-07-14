@@ -11,6 +11,8 @@ public class CreateGrid : MonoBehaviour
     int height;
     int width;
     bool firstCreation = true;
+
+    /*Grid boyutuna göre hexleri yaratıyor.*/
     public void createHexes()
     {
         GameObject gameController = GameObject.Find("GameController");
@@ -45,6 +47,7 @@ public class CreateGrid : MonoBehaviour
         firstCreation = false;
         moveHexes();
     }
+    /*Arraydeki hexleri, indexi ile beraber setpositiona yollar.*/
     public void moveHexes()
     {
         GameObject gameController = GameObject.Find("GameController");
@@ -57,6 +60,7 @@ public class CreateGrid : MonoBehaviour
             }
         }
     }
+    /*Gelen objenin pozisyonunu, gelen x ve y değerlerine göre belirleyip. O pozisyona götürüyor.*/
     IEnumerator setPosition(GameObject obj, int x, int y)
     {
         float time = 0;
