@@ -157,7 +157,7 @@ MonoBehaviour:
   width: 9
   hexColors: 0000000001000000030000000500000004000000
   score: 0
-  bombCounter: 1000
+  bombCounter: 50
   selected: 000000000000000000000000
   locked: 0
 --- !u!4 &233066049

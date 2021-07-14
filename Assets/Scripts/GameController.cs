@@ -26,7 +26,6 @@ public class GameController : MonoBehaviour
 
     public void Start()
     {
-        print(GetComponent<Coordinates>().even.GetLength(0));
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         selected = new int[3] { -1, -1, -1 };
         grid = new GameObject[height, width];
