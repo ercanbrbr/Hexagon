@@ -25,11 +25,13 @@ public class GameController : MonoBehaviour
 
     public void Start()
     {
+        print(GetComponent<Coordinates>().even.GetLength(0));
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         selected = new int[3] { -1, -1, -1 };
         grid = new GameObject[height, width];
         GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
     }
+    /*Parçalar yok edildikten sonra oluşan boşlukları, yukarıdaki parçalar ile doldurur.*/
     void correctGrid()
     {
         for (int i = 0; i < width; i++)
@@ -51,6 +53,7 @@ public class GameController : MonoBehaviour
             }
         }
     }
+    /*Eğer desenlerin yok edilmesi isteniyorsa, yok ediyor. */
     public bool checkPattern(bool destroy)
     {
         List<GameObject> temp = new List<GameObject>();
@@ -89,6 +92,7 @@ public class GameController : MonoBehaviour
         }
         return true;
     }
+    /*Oluşan desen varsa, desen oluşturan parçaları bir listede topluyor. Ve listeyi geri döndürüyor.*/
     List<GameObject> pattern(int i, int j)
     {
         List<GameObject> temp = new List<GameObject>();
@@ -113,10 +117,10 @@ public class GameController : MonoBehaviour
             }
             else
             {
-                for (int x = 0; x < GetComponent<Coordinates>().odd.Length; x++)
+                for (int x = 0; x < GetComponent<Coordinates>().odd.GetLength(0); x++)
                 {
                     int[] tempCoordinate1 = { GetComponent<Coordinates>().odd[x, 0], GetComponent<Coordinates>().odd[x, 1] };
-                    int[] tempCoordinate2 = { GetComponent<Coordinates>().odd[(x + 1) % 6, 0], GetComponent<Coordinates>().odd[(x + 1) % 6, 1] };
+                    int[] tempCoordinate2 = { GetComponent<Coordinates>().odd[(x + 1) % GetComponent<Coordinates>().even.GetLength(0), 0], GetComponent<Coordinates>().odd[(x + 1) % GetComponent<Coordinates>().even.GetLength(0), 1] };
                     try
                     {
                         if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate1[0], j + tempCoordinate1[1]].GetComponent<Renderer>().material.color && grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate2[0], j + tempCoordinate2[1]].GetComponent<Renderer>().material.color)

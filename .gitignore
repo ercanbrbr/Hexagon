@@ -1,116 +1,41 @@
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
-/[Aa]rtifact/
+###
+# Unity folders and files
+###
+[Aa]ssets/AssetStoreTools*
+[Bb]uild/
+[Ll]ibrary/
+[Ll]ocal[Cc]ache/
+[Oo]bj/
+[Tt]emp/
+[Uu]nityGenerated/
+# file on crash reports
+sysinfo.txt
+# Unity3D generated meta files
+*.pidb.meta
 
-/[Mm]emoryCaptures/
-
-!/[Aa]ssets/**/*.meta
-
-# /[Aa]ssets/AssetStoreTools*
-
-/[Aa]ssets/Plugins/Editor/JetBrains*
-
-.vs/
-
-.gradle/
-
-ExportedObj/
-.consulo/
+###
+# VS/MD solution and project files
+###
+[Ee]xportedObj/
+*.booproj
 *.csproj
-*.unityproj
 *.sln
 *.suo
-*.tmp
+*.svd
+*.unityproj
 *.user
 *.userprefs
 *.pidb
-*.booproj
-*.svd
-*.pdb
-*.mdb
-*.opendb
-*.VC.db
+.DS_Store
 
-# Unity3D generated meta files
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
-
-# Unity3D generated file on crash reports
-sysinfo.txt
-
-# Builds
-*.apk
-*.aab
-*.unitypackage
-
-# Crashlytics generated file
-crashlytics-build.properties
-
-# Packed Addressables
-/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
-
-# Temporary auto-generated Android Assets
-/[Aa]ssets/[Ss]treamingAssets/aa.meta
-/[Aa]ssets/[Ss]treamingAssets/aa/*
-
-Library/ArtifactDB
-Library/Artifacts/11/1125f0d2124f6ca0a6407cd2559ec415
-Library/Artifacts/13/13a6aea7ec801e0b72bce866d99621d3
-Library/Artifacts/1a/1aef32b7178978726ffaf62aada7ee21
-Library/Artifacts/1d/1dc5a12802d64ab349768f9183be9714
-Library/Artifacts/1f/1f12198bfa59e4e546f3c201a0dbd407
-Library/Artifacts/27/27dae011b0db240e761894c5c5ce1839
-Library/Artifacts/2f/2f5a7e42da2730ee014085d0132b5484
-Library/Artifacts/33/3300239de6e303b60fab4db0998b42b3
-Library/Artifacts/38/387f260eb54549ef94d65febe57d2f6a
-Library/Artifacts/3f/3f188bc7a9b77c65bb93035654ca4627
-Library/Artifacts/47/47aafd12134aba915238c55f3b341da9
-Library/Artifacts/48/48d88697075db57f85fca8d94ba3b51b
-Library/Artifacts/53/532f20c923b092094bcaf35f2fd85e97
-Library/Artifacts/55/55a17e60566a55288d72240a414b9697
-Library/Artifacts/57/57f2866fadc3be8be6737151379040d7
-Library/Artifacts/58/58fa306e5d59ce6e0b3c7663b172ef9a
-Library/Artifacts/5d/5d63579031468ba36f8ac2ea63f23cad
-Library/Artifacts/61/6190acb4f4ba6834238550984dd1ec23
-Library/Artifacts/64/64372df519a2dbbcc4295843c52209c7
-Library/Artifacts/65/65d981e901d0eb7f421255f778f8af8d
-Library/Artifacts/6a/6afe1bb6160e033bdb5ecad2423cef4c
-Library/Artifacts/6f/6f00f190e393b195c1ac0be3c4099487
-Library/Artifacts/7c/7c05ea88c0ce5b40f6c6a117414602db
-Library/Artifacts/7c/7c73a8dded3533160f660843bb0d991e
-Library/Artifacts/7d/7d0b49c841a722ac79b370ec0676606a
-Library/Artifacts/90/90dcf6cb30448eb6fe892d6275aa077d
-Library/Artifacts/94/9475ed8040d41e5ceeb603fcb1561053
-Library/Artifacts/95/95b9c07e1581f669c93e88ff9d45f968
-Library/Artifacts/9b/9b8419044a79fdae36e975c88934efc6
-Library/Artifacts/a6/a62b7eea41eb67a88409d295b582d727
-Library/Artifacts/aa/aa0c9fb126a56793e5c1904500e891e5
-Library/Artifacts/b4/b4681eaa5bacb23889e7e70bca8e5bd3
-Library/Artifacts/ba/ba1877fb7767f18f592247ca1f7adb29
-Library/Artifacts/c3/c3ee5398dca419d06bb3fbe745835343
-Library/Artifacts/c4/c4952afee48f5e63774e2488646b4d5a
-Library/Artifacts/c6/c6d9aeeeae56ee05cfa33c3efcc9a0d3
-Library/Artifacts/d2/d2e62437fe2c61260f69588b79524008
-Library/Artifacts/d3/d3c61b8b93c0a6559714e8a881ea68a8
-Library/Artifacts/d4/d4181a87134a311a9b0b555f6ca11521
-Library/Artifacts/d5/d5d712db47e930e573e04dc5c16cb493
-Library/Artifacts/d5/d5eb33edd2360a66d517199e2033500e
-Library/Artifacts/d6/d626663d0e51e897c44792b577ff09cb
-Library/Artifacts/d8/d85d323713e5e7702d6f047c5441cd90
-Library/Artifacts/dc/dc4a81efbc77086cd6587901d55b4650
-Library/Artifacts/dc/dc72812ce647cdd7a45d9beac891bee9
-Library/Artifacts/dc/dcc185a4672ef5c54695d8c7d69b1933
-Library/Artifacts/dd/dd9946afd66394bfba4791177a36c506
-Library/Artifacts/de/de88645998d4861f722e293da206372d
-Library/Artifacts/e1/e1a55d9ead3d63b6ff2ee9a6ea74f6c6
-Library/Artifacts/e8/e826afd5aa73392662c1e8824a7e79fb
-Library/Artifacts/e8/e82765887f30b227ee423b948c794974
-Library/Artifacts/ec/ecc4ca3f5a348c0e6d4529fe0ccd335a
-Library/Artifacts/f1/f1f65b55ad4bb45f77ceb8b855bbd256
-Library/Artifacts/11/1125f0d2124f6ca0a6407cd2559ec415
+###
+# OS generated
+###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
