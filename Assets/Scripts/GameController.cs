@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     public int bombCounter = 200;
     public int[] selected;
-    //Birbiri ile çakışabilecek işlemleri engellemek için kilit. İşlem yapılırken true atanır. True iken diğer işlemler, yapılan işlemin bitmesini bekler.
+    /*Birbiri ile çakışabilecek işlemleri engellemek için kilit. İşlem yapılırken true atanır. True iken diğer işlemler, yapılan işlemin bitmesini bekler.*/
     public bool locked = false;
 
     public void Start()
@@ -116,7 +116,7 @@ public class GameController : MonoBehaviour
                 for (int x = 0; x < GetComponent<Coordinates>().odd.Length; x++)
                 {
                     int[] tempCoordinate1 = { GetComponent<Coordinates>().odd[x, 0], GetComponent<Coordinates>().odd[x, 1] };
-                    int[] tempCoordinate2 = { GetComponent<Coordinates>().odd[(x + 1) % 6, 0], GetComponent<Coordinates>().odd[(x + 1) % 6, 1] };
+                    int[] tempCoordinate2 = { GetComponent<Coordinates>().odd[(x + 1) % GetComponent<Coordinates>().odd.Length, 0], GetComponent<Coordinates>().odd[(x + 1) % GetComponent<Coordinates>().odd.Length, 1] };
                     try
                     {
                         if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate1[0], j + tempCoordinate1[1]].GetComponent<Renderer>().material.color && grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate2[0], j + tempCoordinate2[1]].GetComponent<Renderer>().material.color)
@@ -133,7 +133,7 @@ public class GameController : MonoBehaviour
         return temp;
     }
 
-    //Mouseun tıklandığı andaki pozisyonu alır. En yakın hexagonları seçili hale getirir.
+    /*Mouseun tıklandığı andaki pozisyonu alır. En yakın hexagonları seçili hale getirir.*/
     public void selectHexes(Vector2 mousePos)
     {
         float[] closest = { 100f,100f,100f};
@@ -170,9 +170,14 @@ public class GameController : MonoBehaviour
             }
         }
         Array.Sort(selected);
+        /*Seçerken bazen aynı satırdan seçiyor. Seçimi iptal ediyoruz.*/
+        if(selected[0]+1==selected[1] && selected[1] + 1 == selected[2])
+        {
+            return;
+        }
         outlineObject();
     }
-    //Seçili objeleri belirtmek için etrafında bir dış çizgi oluşturur.
+    /*Seçili objeleri belirtmek için etrafında bir dış çizgi oluşturur.*/
     public void outlineObject()
     {
         foreach (var item in grid)
@@ -238,12 +243,48 @@ public class GameController : MonoBehaviour
                         }
                         catch{ }
                     }
+                    checkPossibleCombo();
                     yield break;
                 }
             }
         }
         locked = false;
+        checkPossibleCombo();
         yield return null;
+    }
+    /*Yanyana aynı renkten var mı diye kontrol ediyoruz. Eğer yoksa yapılacak hamle kalmadığı için oyunu sonlandırıyoruz.*/
+    void checkPossibleCombo()
+    {
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                if (j%2==0)
+                {
+                    for (int x = 0; x < GetComponent<Coordinates>().even.Length; x++)
+                    {
+                        int[] tempCoordinate = { GetComponent<Coordinates>().even[x, 0], GetComponent<Coordinates>().odd[x, 1] };
+                        if(grid[i,j].GetComponent<Renderer>().material.color== grid[i + tempCoordinate[0], j + tempCoordinate[1]].GetComponent<Renderer>().material.color)
+                        {
+                            return;
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    for (int x = 0; x < GetComponent<Coordinates>().odd.Length; x++)
+                    {
+                        int[] tempCoordinate = { GetComponent<Coordinates>().odd[x, 0], GetComponent<Coordinates>().odd[x, 1] };
+                        if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate[0], j + tempCoordinate[1]].GetComponent<Renderer>().material.color)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        gameOver();
     }
     public void gameOver()
     {
@@ -266,17 +307,4 @@ public class GameController : MonoBehaviour
         scoreBoard = GameObject.Find("Score");
         scoreBoard.GetComponent<Text>().text = score.ToString();
     }
-    /*IEnumerator test()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            yield return new WaitForSeconds(0.5f);
-            checkPattern();
-            correctGrid();
-            yield return new WaitForSeconds(0.25f);
-            GameObject.Find("Tilemap").GetComponent<CreateGrid>().moveHexes();
-            yield return new WaitForSeconds(0.25f);
-            GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
-        }
-    }*/
 }

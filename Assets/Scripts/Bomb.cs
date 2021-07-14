@@ -5,7 +5,7 @@ using TMPro;
 
 public class Bomb : MonoBehaviour
 {
-    int bombCounter = 1; //Bir eksiği ile başlıyor.
+    int bombCounter = 8; //-1 ile başlıyor.
 
 
     private void Start()
