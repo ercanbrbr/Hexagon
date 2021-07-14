@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -14,16 +16,19 @@ public class GameController : MonoBehaviour
     public GameObject[,] grid;
     [SerializeField]
     int score = 0;
+    int highScore;
+    [SerializeField]
+    public int bombCounter = 200;
     public int[] selected;
+    //Birbiri ile çakışabilecek işlemleri engellemek için kilit. İşlem yapılırken true atanır. True iken diğer işlemler, yapılan işlemin bitmesini bekler.
     public bool locked = false;
 
     public void Start()
     {
-        selected = new int[3] { 0, 0, 0 };
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        selected = new int[3] { -1, -1, -1 };
         grid = new GameObject[height, width];
         GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
-
-        //StartCoroutine(test());
     }
     void correctGrid()
     {
@@ -46,7 +51,7 @@ public class GameController : MonoBehaviour
             }
         }
     }
-    void checkPattern()
+    public bool checkPattern(bool destroy)
     {
         List<GameObject> temp = new List<GameObject>();
         List<GameObject> temp1 = new List<GameObject>();
@@ -61,19 +66,28 @@ public class GameController : MonoBehaviour
                 }
             }
         }
-        foreach (var item in temp)
+        if (temp.Count == 0)
+            return false;
+        if (destroy == true)
         {
-            for (int i = 0; i < grid.Length; i++)
+            if (FindObjectOfType<MainSoundManager>() != null)
+                FindObjectOfType<MainSoundManager>().Play("pop");
+            foreach (var item in temp)
             {
-                if (grid[i / width, i % width] == item)
+                for (int i = 0; i < grid.Length; i++)
                 {
-                    grid[i / width, i % width] = null;
-                    break;
+                    if (grid[i / width, i % width] == item)
+                    {
+                        grid[i / width, i % width] = null;
+                        break;
+                    }
                 }
+                Destroy(item);
+                score += 5;
+                bombCounter -= 5;
             }
-            Destroy(item);
-            score += 5;
         }
+        return true;
     }
     List<GameObject> pattern(int i, int j)
     {
@@ -118,6 +132,8 @@ public class GameController : MonoBehaviour
         catch { }
         return temp;
     }
+
+    //Mouseun tıklandığı andaki pozisyonu alır. En yakın hexagonları seçili hale getirir.
     public void selectHexes(Vector2 mousePos)
     {
         float[] closest = { 100f,100f,100f};
@@ -153,8 +169,10 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+        Array.Sort(selected);
         outlineObject();
     }
+    //Seçili objeleri belirtmek için etrafında bir dış çizgi oluşturur.
     public void outlineObject()
     {
         foreach (var item in grid)
@@ -168,7 +186,9 @@ public class GameController : MonoBehaviour
             grid[index/width, index%width].GetComponent<cakeslice.Outline>().eraseRenderer = false;
         }
     }
-    public IEnumerator spinHexes()
+    /*Seçili olan hex grubunu, gelen bilgiye göre saat yönüne veya tersine döndürüyor. Bu işlem sırasında başka işlemlerin yapılmasını engellemek için locked değişkenine true atıyoruz. 
+    Eğer seçili bir grup yoksa işlem gerçekleştirilmez.*/
+    public IEnumerator spinHexes(bool clockwise)
     {
         foreach (var item in selected)
         {
@@ -179,18 +199,74 @@ public class GameController : MonoBehaviour
         locked = true;
         for (int i = 0; i < 3; i++)
         {
-            temp = grid[selected[0] / width, selected[0] % width];
-            grid[selected[0] / width, selected[0] % width] = grid[selected[1] / width, selected[1] % width];
-            grid[selected[1] / width, selected[1] % width] = grid[selected[2] / width, selected[2] % width];
-            grid[selected[2] / width, selected[2] % width] = temp;
+            if (selected[0]/width==selected[1]/width && clockwise==true || selected[0] / width != selected[1] / width && clockwise == false) //Saat yönünün tersi.
+            {
+                temp = grid[selected[0] / width, selected[0] % width];
+                grid[selected[0] / width, selected[0] % width] = grid[selected[1] / width, selected[1] % width];
+                grid[selected[1] / width, selected[1] % width] = grid[selected[2] / width, selected[2] % width];
+                grid[selected[2] / width, selected[2] % width] = temp;
+            }
+            else if(selected[0] / width != selected[1] / width && clockwise == true || selected[0] / width == selected[1] / width && clockwise == false) //Saat yönü.
+            {
+                temp = grid[selected[0] / width, selected[0] % width];
+                grid[selected[0] / width, selected[0] % width] = grid[selected[2] / width, selected[2] % width];
+                grid[selected[2] / width, selected[2] % width] = grid[selected[1] / width, selected[1] % width];
+                grid[selected[1] / width, selected[1] % width] = temp;
+            }
             
             GameObject.Find("Tilemap").GetComponent<CreateGrid>().moveHexes();
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(0.3f);
+            while (checkPattern(true) == true)
+            {
+                correctGrid();
+                yield return new WaitForSeconds(0.25f);
+                GameObject.Find("Tilemap").GetComponent<CreateGrid>().moveHexes(); 
+                yield return new WaitForSeconds(0.25f);
+                GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
+                scoreUpdate();
+                yield return new WaitForSeconds(0.25f);
+                selected = new int[3] { -1, -1, -1 };
+                if (checkPattern(false) == false)
+                {
+                    locked = false;
+                    outlineObject();
+                    foreach (var item in grid)
+                    {
+                        try
+                        {
+                            item.GetComponent<Bomb>().countDown();
+                        }
+                        catch{ }
+                    }
+                    yield break;
+                }
+            }
         }
         locked = false;
         yield return null;
     }
-    IEnumerator test()
+    public void gameOver()
+    {
+        if (score > highScore)
+        {
+            PlayerPrefs.SetInt("HighScore", Convert.ToInt32(score));
+        }
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        Instantiate(Resources.Load("GameOver"));
+        GameObject.Find("HighScore").GetComponent<Text>().text = "HighScore : "+ highScore.ToString();
+        GameObject.Find("LastScore").GetComponent<Text>().text = score.ToString();
+        enabled = false;
+        GetComponent<MouseEvents>().enabled = false;
+        GetComponent<CreateGrid>().enabled = false;
+        GetComponent<GameController>().enabled = false;
+    }
+    public void scoreUpdate()
+    {
+        GameObject scoreBoard;
+        scoreBoard = GameObject.Find("Score");
+        scoreBoard.GetComponent<Text>().text = score.ToString();
+    }
+    /*IEnumerator test()
     {
         for (int i = 0; i < 10; i++)
         {
@@ -202,5 +278,5 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(0.25f);
             GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
         }
-    }
+    }*/
 }

@@ -6,69 +6,74 @@ public class CreateGrid : MonoBehaviour
 {
     [SerializeField]
     GameObject hexPref;
+    [SerializeField]
+    GameObject hexPrefBomb;
     int height;
     int width;
+    bool firstCreation = true;
     public void createHexes()
     {
-        GameObject temp = GameObject.Find("GameController");
-        height = temp.GetComponent<GameController>().height;
-        width = temp.GetComponent<GameController>().width;
+        GameObject gameController = GameObject.Find("GameController");
+        height = gameController.GetComponent<GameController>().height;
+        width = gameController.GetComponent<GameController>().width;
         
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                if (temp.GetComponent<GameController>().grid[i, j]==null)
+                if (gameController.GetComponent<GameController>().grid[i, j]==null)
                 {
-                    //GameObject temp1 = Instantiate(hexPref, new Vector3((j * 0.75f)-(width/2)*0.75f, (i - ((j % 2)) * 0.5f)-(height/2), 0), Quaternion.Euler(new Vector3(0, 0, 90)));
-                    GameObject temp1 = Instantiate(hexPref, new Vector3(0, 100, 0), Quaternion.Euler(new Vector3(0, 0, 90)));
-                    //StartCoroutine(setPosition(temp1, i, j));
-                    temp1.transform.SetParent(this.transform);
-                    temp1.GetComponent<Renderer>().material.SetColor("_Color", randomColor());
-                    temp.GetComponent<GameController>().grid[i, j] = temp1;
+                    GameObject hex;
+                    if (gameController.GetComponent<GameController>().bombCounter <= 0)
+                        hex = Instantiate(hexPrefBomb, new Vector3(0, 100, 0), Quaternion.Euler(new Vector3(0, 0, 90)));
+                    else
+                        hex = Instantiate(hexPref, new Vector3(0, 100, 0), Quaternion.Euler(new Vector3(0, 0, 90)));
+                    hex.transform.SetParent(this.transform);
+                    gameController.GetComponent<GameController>().grid[i, j] = hex;
+                    do
+                    {
+                        if (gameController.GetComponent<GameController>().bombCounter <= 0)
+                        {
+                            hex.AddComponent<Bomb>();
+                            gameController.GetComponent<GameController>().bombCounter += 1000;
+                        }
+                        hex.GetComponent<Renderer>().material.SetColor("_Color", randomColor());
+                    } while (gameController.GetComponent<GameController>().checkPattern(false) && firstCreation==true);
                 }
             }
         }
+        firstCreation = false;
         moveHexes();
     }
     public void moveHexes()
     {
-        GameObject temp = GameObject.Find("GameController");
+        GameObject gameController = GameObject.Find("GameController");
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                if(temp.GetComponent<GameController>().grid[i, j]!=null)
-                    StartCoroutine(setPosition(temp.GetComponent<GameController>().grid[i,j], i, j));
+                if(gameController.GetComponent<GameController>().grid[i, j]!=null)
+                    StartCoroutine(setPosition(gameController.GetComponent<GameController>().grid[i,j], i, j));
             }
         }
     }
-    /*IEnumerator setPosition(GameObject obj, int x,int y)
-    {
-
-        //obj.transform.position = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
-        Vector3 temp = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
-        while (obj != null && temp != obj.transform.position)
-        {
-            obj.transform.position = Vector3.Lerp(obj.transform.position, temp, 0.15f);
-            yield return null;
-        }
-        yield return null;
-    }*/
-
     IEnumerator setPosition(GameObject obj, int x, int y)
     {
         float time = 0;
-        float duration = 0.5f;
-        //obj.transform.position = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
-        Vector3 temp = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
+        float duration = 0.3f;
+        Vector3 position = new Vector3((y * 0.75f) - (width / 2) * 0.75f, (x - ((y % 2)) * 0.5f) - (height / 2), 0);
         while (time<duration)
         {
-            obj.transform.position = Vector3.Lerp(obj.transform.position, temp, time/duration);
-            time += Time.deltaTime;
+            try
+            {
+                obj.transform.position = Vector3.Lerp(obj.transform.position, position, time / duration);
+                time += Time.deltaTime;
+            }
+            catch { }
             yield return null;
         }
     }
+    /*Seçili renkler arasından rastgele renk döndürür.*/
     Color randomColor()
     {
         GameObject temp = GameObject.Find("GameController");

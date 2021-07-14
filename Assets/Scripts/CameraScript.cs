@@ -6,12 +6,14 @@ public class CameraScript : MonoBehaviour
 {
     [SerializeField]
     Camera mainCam;
-    Vector3 firstPos;
     float minX;
     float minY;
     float maxX;
     float maxY;
-    public float panSpeed = 0.5f;
+    public float panSpeed = 0.5f; /*Kamera hareket hızı.*/
+
+
+    /*Başlamadan önce grid boyutuna göre kamera boyutunu ayarlıyor.*/
     private void Awake()
     {
         if (GetComponent<GameController>().width>=10)
@@ -25,33 +27,23 @@ public class CameraScript : MonoBehaviour
     {
         StartCoroutine(getValues());
     }
+
+    /*Grid boyutuna göre kameranın sınırlarını belirliyor.*/
     IEnumerator getValues()
     {
         yield return new WaitForSeconds(0.5f);
         minX = GetComponent<GameController>().grid[0, 0].transform.position.x + 4;
         maxX = GetComponent<GameController>().grid[0, GetComponent<GameController>().width - 1].transform.position.x - 4;
         minY = GetComponent<GameController>().grid[0, 0].transform.position.y + 8;
-        maxY = GetComponent<GameController>().grid[GetComponent<GameController>().height - 1, 0].transform.position.y - 8;
+        maxY = GetComponent<GameController>().grid[GetComponent<GameController>().height - 1, 0].transform.position.y - 5;
         yield return null;
     }
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (GetComponent<GameController>().locked == false)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    GetComponent<GameController>().selected[i] = -1;
-                }
-                GetComponent<GameController>().outlineObject();
-            }
-            firstPos = Input.mousePosition;
-        }
-        if (!Input.GetMouseButton(1)) return;
 
+    /*Kamerayı sınırlar içerisinde hareket ettiriyor.*/
+    public void moveCam(Vector3 firstPos)
+    {
         Vector3 pos = mainCam.ScreenToViewportPoint(Input.mousePosition - firstPos);
-        if (pos.x < 0 && mainCam.transform.position.x<= minX)
+        if (pos.x < 0 && mainCam.transform.position.x <= minX)
         {
             pos.x = 0;
         }
