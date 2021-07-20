@@ -155,9 +155,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   height: 8
   width: 9
-  hexColors: 0000000001000000030000000500000004000000
-  score: 0
-  bombCounter: 50
+  hexColors: 0000000001000000020000000700000004000000
+  bombCounter: 1000
   selected: 000000000000000000000000
   locked: 0
 --- !u!4 &233066049
@@ -200,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec4853525a5d0294c89dc1155b1320cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCam: {fileID: 519420031}
+  _mainCam: {fileID: 519420031}
   panSpeed: 2
 --- !u!114 &233066052
 MonoBehaviour:

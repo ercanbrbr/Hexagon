@@ -11,36 +11,39 @@ public class CreateGrid : MonoBehaviour
     int height;
     int width;
     bool firstCreation = true;
+    GameController _gameController;
+    private void Awake()
+    {
+        _gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        height = _gameController.height;
+        width = _gameController.width;
+    }
 
     /*Grid boyutuna göre hexleri yaratıyor.*/
     public void createHexes()
     {
-        GameObject gameController = GameObject.Find("GameController");
-        height = gameController.GetComponent<GameController>().height;
-        width = gameController.GetComponent<GameController>().width;
-        
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                if (gameController.GetComponent<GameController>().grid[i, j]==null)
+                if (_gameController.grid[i, j]==null)
                 {
                     GameObject hex;
-                    if (gameController.GetComponent<GameController>().bombCounter <= 0)
+                    if (_gameController.bombCounter <= 0)
                         hex = Instantiate(hexPrefBomb, new Vector3(0, 100, 0), Quaternion.Euler(new Vector3(0, 0, 90)));
                     else
                         hex = Instantiate(hexPref, new Vector3(0, 100, 0), Quaternion.Euler(new Vector3(0, 0, 90)));
                     hex.transform.SetParent(this.transform);
-                    gameController.GetComponent<GameController>().grid[i, j] = hex;
+                    _gameController.grid[i, j] = hex;
                     do
                     {
-                        if (gameController.GetComponent<GameController>().bombCounter <= 0)
+                        if (_gameController.bombCounter <= 0)
                         {
                             hex.AddComponent<Bomb>();
-                            gameController.GetComponent<GameController>().bombCounter += 1000;
+                            _gameController.bombCounter += 1000;
                         }
                         hex.GetComponent<Renderer>().material.SetColor("_Color", randomColor());
-                    } while (gameController.GetComponent<GameController>().checkPattern(false) && firstCreation==true);
+                    } while (_gameController.checkPattern(false) && firstCreation==true);
                 }
             }
         }
@@ -50,13 +53,12 @@ public class CreateGrid : MonoBehaviour
     /*Arraydeki hexleri, indexi ile beraber setpositiona yollar.*/
     public void moveHexes()
     {
-        GameObject gameController = GameObject.Find("GameController");
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                if(gameController.GetComponent<GameController>().grid[i, j]!=null)
-                    StartCoroutine(setPosition(gameController.GetComponent<GameController>().grid[i,j], i, j));
+                if(_gameController.grid[i, j]!=null)
+                    StartCoroutine(setPosition(_gameController.grid[i,j], i, j));
             }
         }
     }

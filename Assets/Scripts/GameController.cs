@@ -6,30 +6,33 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    /*Buraya renk eklerseniz, CreateGrid scripttindeki randomColor fonksiyonuna karşılığının yazılması gerekiyor.*/
-    public enum Colors {Red,Blue,Orange,Green,Yellow,White,Black,Gray }; 
-    [SerializeField]
+    public enum Colors {Red,Blue,Orange,Green,Yellow,White,Black,Gray }; /*Buraya renk eklerseniz, CreateGrid scripttindeki randomColor fonksiyonuna karşılığının yazılması gerekiyor.*/
     public int height = 8;
-    [SerializeField]
     public int width = 9;
-    [SerializeField]
     public Colors[] hexColors;
     public GameObject[,] grid;
-    [SerializeField]
     int score = 0;
     int highScore;
-    [SerializeField]
     public int bombCounter = 200;
     public int[] selected;
-    /*Birbiri ile çakışabilecek işlemleri engellemek için kilit. İşlem yapılırken true atanır. True iken diğer işlemler, yapılan işlemin bitmesini bekler.*/
-    public bool locked = false;
+    public bool locked = false; /*Birbiri ile çakışabilecek işlemleri engellemek için kilit. İşlem yapılırken true atanır. True iken diğer işlemler, yapılan işlemin bitmesini bekler.*/
+    CreateGrid _createGrid;
+    Coordinates _coordinates;
 
+
+
+
+    private void Awake()
+    {
+        _createGrid = GameObject.Find("Tilemap").GetComponent<CreateGrid>();
+        _coordinates = GetComponent<Coordinates>();
+    }
     public void Start()
     {
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         selected = new int[3] { -1, -1, -1 };
         grid = new GameObject[height, width];
-        GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
+        _createGrid.createHexes();
     }
     /*Parçalar yok edildikten sonra oluşan boşlukları, yukarıdaki parçalar ile doldurur.*/
     void correctGrid()
@@ -100,10 +103,10 @@ public class GameController : MonoBehaviour
         {
             if (j%2==0)
             {
-                for (int x = 0; x < GetComponent<Coordinates>().even.GetLength(0); x++)
+                for (int x = 0; x < _coordinates.even.GetLength(0); x++)
                 {
-                    int[] tempCoordinate1 = { GetComponent<Coordinates>().even[x, 0], GetComponent<Coordinates>().even[x, 1] };
-                    int[] tempCoordinate2 = { GetComponent<Coordinates>().even[(x + 1)% GetComponent<Coordinates>().even.GetLength(0), 0], GetComponent<Coordinates>().even[(x + 1)% GetComponent<Coordinates>().even.GetLength(0), 1] };
+                    int[] tempCoordinate1 = { _coordinates.even[x, 0], _coordinates.even[x, 1] };
+                    int[] tempCoordinate2 = { _coordinates.even[(x + 1)% _coordinates.even.GetLength(0), 0], _coordinates.even[(x + 1)% _coordinates.even.GetLength(0), 1] };
                     try
                     {
                         if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate1[0], j + tempCoordinate1[1]].GetComponent<Renderer>().material.color && grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate2[0], j + tempCoordinate2[1]].GetComponent<Renderer>().material.color)
@@ -117,10 +120,10 @@ public class GameController : MonoBehaviour
             }
             else
             {
-                for (int x = 0; x < GetComponent<Coordinates>().odd.GetLength(0); x++)
+                for (int x = 0; x < _coordinates.odd.GetLength(0); x++)
                 {
-                    int[] tempCoordinate1 = { GetComponent<Coordinates>().odd[x, 0], GetComponent<Coordinates>().odd[x, 1] };
-                    int[] tempCoordinate2 = { GetComponent<Coordinates>().odd[(x + 1) % GetComponent<Coordinates>().even.GetLength(0), 0], GetComponent<Coordinates>().odd[(x + 1) % GetComponent<Coordinates>().even.GetLength(0), 1] };
+                    int[] tempCoordinate1 = { _coordinates.odd[x, 0], _coordinates.odd[x, 1] };
+                    int[] tempCoordinate2 = { _coordinates.odd[(x + 1) % _coordinates.even.GetLength(0), 0], _coordinates.odd[(x + 1) % _coordinates.even.GetLength(0), 1] };
                     try
                     {
                         if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate1[0], j + tempCoordinate1[1]].GetComponent<Renderer>().material.color && grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate2[0], j + tempCoordinate2[1]].GetComponent<Renderer>().material.color)
@@ -222,16 +225,16 @@ public class GameController : MonoBehaviour
                 grid[selected[2] / width, selected[2] % width] = grid[selected[1] / width, selected[1] % width];
                 grid[selected[1] / width, selected[1] % width] = temp;
             }
-            
-            GameObject.Find("Tilemap").GetComponent<CreateGrid>().moveHexes();
+
+            _createGrid.moveHexes();
             yield return new WaitForSeconds(0.3f);
             while (checkPattern(true) == true)
             {
                 correctGrid();
                 yield return new WaitForSeconds(0.25f);
-                GameObject.Find("Tilemap").GetComponent<CreateGrid>().moveHexes(); 
+                _createGrid.moveHexes(); 
                 yield return new WaitForSeconds(0.25f);
-                GameObject.Find("Tilemap").GetComponent<CreateGrid>().createHexes();
+                _createGrid.createHexes();
                 scoreUpdate();
                 yield return new WaitForSeconds(0.25f);
                 selected = new int[3] { -1, -1, -1 };
@@ -265,9 +268,9 @@ public class GameController : MonoBehaviour
             {
                 if (j%2==0)
                 {
-                    for (int x = 0; x < GetComponent<Coordinates>().even.Length; x++)
+                    for (int x = 0; x < _coordinates.even.Length; x++)
                     {
-                        int[] tempCoordinate = { GetComponent<Coordinates>().even[x, 0], GetComponent<Coordinates>().odd[x, 1] };
+                        int[] tempCoordinate = { _coordinates.even[x, 0], _coordinates.odd[x, 1] };
                         try
                         {
                             if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate[0], j + tempCoordinate[1]].GetComponent<Renderer>().material.color)
@@ -281,9 +284,9 @@ public class GameController : MonoBehaviour
                 }
                 else
                 {
-                    for (int x = 0; x < GetComponent<Coordinates>().odd.Length; x++)
+                    for (int x = 0; x < _coordinates.odd.Length; x++)
                     {
-                        int[] tempCoordinate = { GetComponent<Coordinates>().odd[x, 0], GetComponent<Coordinates>().odd[x, 1] };
+                        int[] tempCoordinate = { _coordinates.odd[x, 0], _coordinates.odd[x, 1] };
                         try
                         {
                             if (grid[i, j].GetComponent<Renderer>().material.color == grid[i + tempCoordinate[0], j + tempCoordinate[1]].GetComponent<Renderer>().material.color)
@@ -309,10 +312,9 @@ public class GameController : MonoBehaviour
         Instantiate(Resources.Load("GameOver"));
         GameObject.Find("HighScore").GetComponent<Text>().text = "HighScore : "+ highScore.ToString();
         GameObject.Find("LastScore").GetComponent<Text>().text = score.ToString();
-        enabled = false;
+        this.enabled = false;
         GetComponent<MouseEvents>().enabled = false;
         GetComponent<CreateGrid>().enabled = false;
-        GetComponent<GameController>().enabled = false;
     }
     public void scoreUpdate()
     {
